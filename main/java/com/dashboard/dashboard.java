@@ -10,9 +10,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,12 +27,25 @@ import javafx.stage.Stage;
 
 public class dashboard extends Application{
 
+
+    //News API Info:
+
+    private static String apiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
+    private static String apiUrl = "https://newsapi.org/v2/everything";
+
     //Weather API Info
     private static String weatherApiKey = "df9f6adc7d89e0757fdee3c72ae7b5eb";
     private static String weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
 
-    //Weather Search Bar
-    private TextArea weatherSearchField; 
+    //News API Entry
+
+    private TextArea newsApiEntry;
+
+    //News Search Bar
+    private TextArea newsSearchField; 
+
+    //News Search Labels
+    private Label authorLabel;
 
     public static void main(String[] args) {
         launch(args);
@@ -53,18 +69,18 @@ public class dashboard extends Application{
         headingLabel.setTranslateY(10);
 
 
-        // Actionbutton to launch weather search screen: 
+        // Actionbutton to launch news screen: 
         
-        Button launchWeatherScreenButton = new Button("Search Weather");
+        Button launchNewsScreenButton = new Button("Search News");
 
-        launchWeatherScreenButton.setMaxWidth(280);
-        launchWeatherScreenButton.setMaxHeight(200);
-        launchWeatherScreenButton.setTranslateX(160);
-        launchWeatherScreenButton.setTranslateY(40);
-        launchWeatherScreenButton.setOnAction(e -> weatherFrame());        
+        launchNewsScreenButton.setMaxWidth(280);
+        launchNewsScreenButton.setMaxHeight(200);
+        launchNewsScreenButton.setTranslateX(160);
+        launchNewsScreenButton.setTranslateY(40);
+        launchNewsScreenButton.setOnAction(e -> newsFrame());        
 
         VBox dashboardFrame = new VBox();
-        dashboardFrame.getChildren().addAll(headingLabel,launchWeatherScreenButton);
+        dashboardFrame.getChildren().addAll(headingLabel,launchNewsScreenButton);
         
 
         Scene scene = new Scene(dashboardFrame, 600, 500);
@@ -73,55 +89,71 @@ public class dashboard extends Application{
         primaryStage.setResizable(false);
     }
 
-    // Weather Frame Method
+    // News Frame Method
 
-    public void weatherFrame() {
+    public void newsFrame() {
         
-        // Weather Frame
-        Stage weatherFrame = new Stage();
+        // News Frame
+        Stage newsFrame = new Stage();
         
 
         //Fonts
         Font fontHeadingLabel = Font.font("arial", FontWeight.BOLD, 20);
+        Font fontResultLavel = Font.font("arial", 20);
+        
+                
+        //Labels
 
-        //Weather Search Bar
-        weatherSearchField = new TextArea();
-        weatherSearchField.setTranslateX(250);
-        weatherSearchField.setTranslateY(25);
-        weatherSearchField.setMaxWidth(310);
-        weatherSearchField.setMaxHeight(0);
+        Label heading_Label = new Label("Search Current News");
+        heading_Label.setFont(fontHeadingLabel);
+        heading_Label.setTranslateX(280);
+        heading_Label.setTranslateY(20);
+
+    
+        //Entries
+        newsSearchField = new TextArea();
+        newsSearchField.setTranslateX(250);
+        newsSearchField.setTranslateY(40);
+        newsSearchField.setMaxWidth(310);
+        newsSearchField.setMaxHeight(0);
+
+        //newsApiEntry = new TextArea();
+        //newsApiEntry.setMaxWidth(310);
+        //newsApiEntry.setMaxHeight(0);
+        //newsApiEntry.setTranslateX(240);
+        //newsApiEntry.setTranslateY(-80);
+
 
         //Buttons:
 
-        Button searchButton = new Button("Search Weather");
-        searchButton.setTranslateX(340);
-        searchButton.setTranslateY(50);
+        Button newsSearchButton = new Button("Search News");
+        newsSearchButton.setTranslateX(340);
+        newsSearchButton.setTranslateY(60);
+        newsSearchButton.setOnAction(e -> searchNews(newsSearchField.getText()));
 
-        //Labels
+        // Result Labels
 
-        Label heading_Label = new Label("Search Current Weather");
-        heading_Label.setFont(fontHeadingLabel);
-        heading_Label.setTranslateX(270);
-        heading_Label.setTranslateY(10);
+        authorLabel = new Label("Author");
+        authorLabel.setFont(fontResultLavel);
+        authorLabel.setTranslateX(150);
+        authorLabel.setTranslateY(100);
 
-
-
-        VBox weatherBox = new VBox();
-        weatherBox.getChildren().addAll(heading_Label, weatherSearchField, searchButton);
+        VBox newsBox = new VBox();
+        newsBox.getChildren().addAll(heading_Label, newsSearchField, newsSearchButton, authorLabel);
         
-        Scene weatherScene = new Scene(weatherBox, 800, 800);
-        weatherFrame.setScene(weatherScene);
-        weatherFrame.show();
-        weatherFrame.setResizable(false);
+        Scene newsScene = new Scene(newsBox, 800, 500);
+        newsFrame.setScene(newsScene);
+        newsFrame.show();
+        newsFrame.setResizable(false);
     }
 
     // Method to build URL with user input
 
-    public void searchWeather(String weatherUserInput) {
+    public void searchNews (String userInput) {
 
         try {
             
-            URI uri = new URI(buildWeatherApiUrl(weatherUserInput));
+            URI uri = new URI(buildApiUrl(userInput));
             URL url = uri.toURL();
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -139,8 +171,10 @@ public class dashboard extends Application{
                     
                 }
 
-                parseWeatherData(response.toString());
+                parseNewsData(response.toString());
                 
+            } else {
+
             }
 
 
@@ -148,22 +182,26 @@ public class dashboard extends Application{
             e.printStackTrace();
         }
     }
-        // Build API url with the user input
 
-    private static String buildWeatherApiUrl(String weatherUserInput) {
-        return String.format("%s?q=%s&appid=%s&units=metric", weatherApiUrl, weatherUserInput, weatherApiKey);
+    public static String buildApiUrl(String userInput) {
+        return String.format(apiUrl + "?q=" + userInput + "&apiKey=" + apiKey);
     }
 
-    //  Display Weather Data
-    private void parseWeatherData(String getWeatherData){
+    private void parseNewsData(String newsData) {
 
-        JSONObject json = new JSONObject(getWeatherData);
+        JSONObject json = new JSONObject(newsData);
         
-        // LEFT OFF HERE:
-        
+        JSONArray articleArr = json.getJSONArray("articles");
+        JSONObject zero = articleArr.getJSONObject(0);
+
+        String author0 = zero.getString("author");
+
+        authorLabel.setText(author0);
+
 
 
     }
+    
 
     
 }
