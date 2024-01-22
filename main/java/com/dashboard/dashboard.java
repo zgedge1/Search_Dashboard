@@ -17,6 +17,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -24,12 +26,26 @@ import javafx.stage.Stage;
 
 public class dashboard extends Application{
 
-    //Weather API Info
-    private static String weatherApiKey = "df9f6adc7d89e0757fdee3c72ae7b5eb";
-    private static String weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+    //news API Info
 
-    //Weather Search Bar
-    private TextArea weatherSearchField; 
+    private static String newsApiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
+    private static String newsApiUrl = "https://newsapi.org/v2/everything";
+
+
+    //news Search Bar
+    private TextArea newsSearchField; 
+
+    // News Results
+
+    private ImageView newsImage0;
+
+    private Label titleLbl0;
+    private Label titleLbl1;
+    private Label titleLbl2;
+    
+    private Label descriptionLbl0; 
+    private Label descriptionLbl1;
+    private Label descriptionlabel2;
 
     public static void main(String[] args) {
         launch(args);
@@ -53,18 +69,27 @@ public class dashboard extends Application{
         headingLabel.setTranslateY(10);
 
 
-        // Actionbutton to launch weather search screen: 
+        // Actionbutton to launch news search screen: 
         
-        Button launchWeatherScreenButton = new Button("Search Weather");
+        Button launchnewsScreenButton = new Button("Search News");
+        launchnewsScreenButton.setMaxWidth(280);
+        launchnewsScreenButton.setMaxHeight(200);
+        launchnewsScreenButton.setTranslateX(160);
+        launchnewsScreenButton.setTranslateY(40);
+        launchnewsScreenButton.setOnAction(e -> newsFrame());
+        
+        // Actionbutton to launch stock screen:
 
-        launchWeatherScreenButton.setMaxWidth(280);
-        launchWeatherScreenButton.setMaxHeight(200);
-        launchWeatherScreenButton.setTranslateX(160);
-        launchWeatherScreenButton.setTranslateY(40);
-        launchWeatherScreenButton.setOnAction(e -> weatherFrame());        
+        Button launchStockScreenButton = new Button("Search Stocks");
+        launchStockScreenButton.setMaxWidth(280);
+        launchStockScreenButton.setMaxHeight(200);
+        launchStockScreenButton.setMaxHeight(200);
+        launchStockScreenButton.setTranslateX(160);
+        launchStockScreenButton.setTranslateY(60);
+        launchStockScreenButton.setOnAction(e -> openStockWindow());
 
         VBox dashboardFrame = new VBox();
-        dashboardFrame.getChildren().addAll(headingLabel,launchWeatherScreenButton);
+        dashboardFrame.getChildren().addAll(headingLabel,launchnewsScreenButton, launchStockScreenButton);
         
 
         Scene scene = new Scene(dashboardFrame, 600, 500);
@@ -73,55 +98,92 @@ public class dashboard extends Application{
         primaryStage.setResizable(false);
     }
 
-    // Weather Frame Method
+    // news Frame Method
 
-    public void weatherFrame() {
+    public void newsFrame() {
         
-        // Weather Frame
-        Stage weatherFrame = new Stage();
+        // news Frame
+        Stage newsFrame = new Stage();
         
 
         //Fonts
         Font fontHeadingLabel = Font.font("arial", FontWeight.BOLD, 20);
+        Font fontResuleLabel = Font.font("arial", 18);
 
-        //Weather Search Bar
-        weatherSearchField = new TextArea();
-        weatherSearchField.setTranslateX(250);
-        weatherSearchField.setTranslateY(25);
-        weatherSearchField.setMaxWidth(310);
-        weatherSearchField.setMaxHeight(0);
+        //news Search Bar
+        newsSearchField = new TextArea();
+        newsSearchField.setTranslateX(250);
+        newsSearchField.setTranslateY(25);
+        newsSearchField.setMaxWidth(310);
+        newsSearchField.setMaxHeight(0);
 
         //Buttons:
 
-        Button searchButton = new Button("Search Weather");
-        searchButton.setTranslateX(340);
+        Button searchButton = new Button("Search");
+        searchButton.setTranslateX(360);
         searchButton.setTranslateY(50);
+        searchButton.setOnAction(e -> searchnews(newsSearchField.getText()));
 
         //Labels
 
-        Label heading_Label = new Label("Search Current Weather");
+        Label heading_Label = new Label("Search Current news");
         heading_Label.setFont(fontHeadingLabel);
         heading_Label.setTranslateX(270);
         heading_Label.setTranslateY(10);
 
+        // NewsResult Labels:
 
-
-        VBox weatherBox = new VBox();
-        weatherBox.getChildren().addAll(heading_Label, weatherSearchField, searchButton);
+        newsImage0 = new ImageView();
+        newsImage0.setFitHeight(200);
+        newsImage0.setFitWidth(200);
         
-        Scene weatherScene = new Scene(weatherBox, 800, 800);
-        weatherFrame.setScene(weatherScene);
-        weatherFrame.show();
-        weatherFrame.setResizable(false);
+
+        titleLbl0 = new Label();
+        titleLbl0.setTranslateX(80);
+        titleLbl0.setTranslateY(90);
+        titleLbl0.setFont(fontResuleLabel);
+        titleLbl0.setWrapText(true);
+        titleLbl0.setPrefWidth(300);
+
+        titleLbl1 = new Label();
+        titleLbl1.setTranslateX(80);
+        titleLbl1.setTranslateY(250);
+        titleLbl1.setFont(fontResuleLabel);
+        titleLbl1.setWrapText(true);
+        titleLbl1.setPrefWidth(300);
+        
+        descriptionLbl0 = new Label();
+        descriptionLbl0.setTranslateX(400);
+        descriptionLbl0.setTranslateY(-10);
+        descriptionLbl0.setFont(fontResuleLabel);
+        descriptionLbl0.setWrapText(true);
+        descriptionLbl0.setPrefWidth(300);
+
+        descriptionLbl1 = new Label();
+        descriptionLbl1.setTranslateX(400);
+        descriptionLbl1.setTranslateY(80);
+        descriptionLbl1.setFont(fontResuleLabel);
+        descriptionLbl1.setWrapText(true);
+        descriptionLbl1.setPrefWidth(300);;
+
+        
+
+        VBox newsBox = new VBox();
+        newsBox.getChildren().addAll(heading_Label, newsSearchField, searchButton, titleLbl0, titleLbl1 ,descriptionLbl0, descriptionLbl1 ,newsImage0);
+        
+        Scene newsScene = new Scene(newsBox, 800, 800);
+        newsFrame.setScene(newsScene);
+        newsFrame.show();
+        newsFrame.setResizable(false);
     }
 
     // Method to build URL with user input
 
-    public void searchWeather(String weatherUserInput) {
+    public void searchnews(String newsUserInput) {
 
         try {
             
-            URI uri = new URI(buildWeatherApiUrl(weatherUserInput));
+            URI uri = new URI(buildnewsApiUrl(newsUserInput));
             URL url = uri.toURL();
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -139,7 +201,7 @@ public class dashboard extends Application{
                     
                 }
 
-                parseWeatherData(response.toString());
+                parsenewsData(response.toString());
                 
             }
 
@@ -150,17 +212,57 @@ public class dashboard extends Application{
     }
         // Build API url with the user input
 
-    private static String buildWeatherApiUrl(String weatherUserInput) {
-        return String.format("%s?q=%s&appid=%s&units=metric", weatherApiUrl, weatherUserInput, weatherApiKey);
+    private static String buildnewsApiUrl(String newsUserInput) {
+        return String.format(newsApiUrl + "?q=" + newsUserInput + "&apiKey=" + newsApiKey);
     }
 
-    //  Display Weather Data
-    private void parseWeatherData(String getWeatherData){
+    //  Display news Data
+    private void parsenewsData(String getnewsData){
 
-        JSONObject json = new JSONObject(getWeatherData);
+        JSONObject json = new JSONObject(getnewsData);
+
+        JSONArray articleArr = json.getJSONArray("articles");
+        JSONObject zero = articleArr.getJSONObject(0);
+        JSONObject one = articleArr.getJSONObject(1);
+
+        //String imageurl0 = zero.getString("urlToImage");
+        String title0 = zero.getString("title");
+        String description0 = zero.getString("description");
+
+        String title1 = one.getString("title");
+        String description1 = one.getString("description");
+
+
+        titleLbl0 .setText(title0);
+        descriptionLbl0.setText(description0);
+
+        titleLbl1.setText(title1);
+        descriptionLbl1.setText(description1);
         
-        // LEFT OFF HERE:
-        
+        //displayNewsImage(imageurl0);
+
+    }
+
+    private void openStockWindow() {
+
+        Stage stockWindowStage = new Stage();
+
+        Font fontStockHeading = Font.font("Arial", FontWeight.BLACK, 20);
+
+        Label stockHeadingLabel = new Label("Search Today's Stocks");
+        stockHeadingLabel.setTranslateX(180);
+        stockHeadingLabel.setTranslateY(20);
+        stockHeadingLabel.setFont(fontStockHeading);
+
+
+
+        VBox stockBox = new VBox();
+        stockBox.getChildren().addAll(stockHeadingLabel);
+
+        Scene stockScene = new Scene(stockBox, 600, 600);
+        stockWindowStage.setScene(stockScene);
+        stockWindowStage.show();
+        stockWindowStage.setResizable(false);
 
 
     }
