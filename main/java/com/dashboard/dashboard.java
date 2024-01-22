@@ -71,16 +71,25 @@ public class dashboard extends Application{
 
         // Actionbutton to launch news search screen: 
         
-        Button launchnewsScreenButton = new Button("Search news");
-
+        Button launchnewsScreenButton = new Button("Search News");
         launchnewsScreenButton.setMaxWidth(280);
         launchnewsScreenButton.setMaxHeight(200);
         launchnewsScreenButton.setTranslateX(160);
         launchnewsScreenButton.setTranslateY(40);
-        launchnewsScreenButton.setOnAction(e -> newsFrame());        
+        launchnewsScreenButton.setOnAction(e -> newsFrame());
+        
+        // Actionbutton to launch stock screen:
+
+        Button launchStockScreenButton = new Button("Search Stocks");
+        launchStockScreenButton.setMaxWidth(280);
+        launchStockScreenButton.setMaxHeight(200);
+        launchStockScreenButton.setMaxHeight(200);
+        launchStockScreenButton.setTranslateX(160);
+        launchStockScreenButton.setTranslateY(60);
+        launchStockScreenButton.setOnAction(e -> openStockWindow());
 
         VBox dashboardFrame = new VBox();
-        dashboardFrame.getChildren().addAll(headingLabel,launchnewsScreenButton);
+        dashboardFrame.getChildren().addAll(headingLabel,launchnewsScreenButton, launchStockScreenButton);
         
 
         Scene scene = new Scene(dashboardFrame, 600, 500);
@@ -129,28 +138,28 @@ public class dashboard extends Application{
         newsImage0.setFitWidth(200);
         
 
-        titleLbl0 = new Label("Title0");
+        titleLbl0 = new Label();
         titleLbl0.setTranslateX(80);
         titleLbl0.setTranslateY(90);
         titleLbl0.setFont(fontResuleLabel);
         titleLbl0.setWrapText(true);
         titleLbl0.setPrefWidth(300);
 
-        titleLbl1 = new Label("Title1");
+        titleLbl1 = new Label();
         titleLbl1.setTranslateX(80);
         titleLbl1.setTranslateY(250);
         titleLbl1.setFont(fontResuleLabel);
         titleLbl1.setWrapText(true);
         titleLbl1.setPrefWidth(300);
         
-        descriptionLbl0 = new Label("Description0");
+        descriptionLbl0 = new Label();
         descriptionLbl0.setTranslateX(400);
         descriptionLbl0.setTranslateY(-10);
         descriptionLbl0.setFont(fontResuleLabel);
         descriptionLbl0.setWrapText(true);
         descriptionLbl0.setPrefWidth(300);
 
-        descriptionLbl1 = new Label("Description1");
+        descriptionLbl1 = new Label();
         descriptionLbl1.setTranslateX(400);
         descriptionLbl1.setTranslateY(80);
         descriptionLbl1.setFont(fontResuleLabel);
@@ -216,7 +225,7 @@ public class dashboard extends Application{
         JSONObject zero = articleArr.getJSONObject(0);
         JSONObject one = articleArr.getJSONObject(1);
 
-        String imageurl0 = zero.getString("urlToImage");
+        //String imageurl0 = zero.getString("urlToImage");
         String title0 = zero.getString("title");
         String description0 = zero.getString("description");
 
@@ -230,28 +239,33 @@ public class dashboard extends Application{
         titleLbl1.setText(title1);
         descriptionLbl1.setText(description1);
         
-        displayNewsImage(imageurl0);
+        //displayNewsImage(imageurl0);
 
     }
 
-    private void displayNewsImage(String imageUrl) {
+    private void openStockWindow() {
 
-        try {
-            
-            System.out.println("Image URl: " + imageUrl);
-            
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                Image image = new Image(imageUrl);
-                newsImage0.setImage(image);
-                
-            } else {
-                newsImage0.setImage(null);
-            }
+        Stage stockWindowStage = new Stage();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Font fontStockHeading = Font.font("Arial", FontWeight.BLACK, 20);
+
+        Label stockHeadingLabel = new Label("Search Today's Stocks");
+        stockHeadingLabel.setTranslateX(180);
+        stockHeadingLabel.setTranslateY(20);
+        stockHeadingLabel.setFont(fontStockHeading);
+
+
+
+        VBox stockBox = new VBox();
+        stockBox.getChildren().addAll(stockHeadingLabel);
+
+        Scene stockScene = new Scene(stockBox, 600, 600);
+        stockWindowStage.setScene(stockScene);
+        stockWindowStage.show();
+        stockWindowStage.setResizable(false);
+
 
     }
+
     
 }
