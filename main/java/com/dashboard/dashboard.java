@@ -31,6 +31,10 @@ public class dashboard extends Application{
     private static String newsApiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
     private static String newsApiUrl = "https://newsapi.org/v2/everything";
 
+    //Stock API Info
+
+    private static String stockApiUrl = "https://api.twelvedata.com/time_series";
+    private static String stockApiKey = "b31fcc2718da460a83388bca924328c";
 
     //news Search Bar
     private TextArea newsSearchField; 
@@ -53,6 +57,10 @@ public class dashboard extends Application{
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void setRoot(String root) {
+
     }
 
     // Method to show inital dashboard to show search options
@@ -313,7 +321,11 @@ public class dashboard extends Application{
     }
 
     private static String buildStockApi(String stockUserInput) {
-        return String.format(stockUserInput, null)
+        
+        String symbols = stockUserInput;
+        String interval = "1min";
+
+        return String.format("%s?symbol=%s&interval=%s&apikey=%s", stockApiUrl, symbols, interval, stockApiKey);
 
     }
 
