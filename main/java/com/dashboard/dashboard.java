@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.application.Application;
+import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +35,7 @@ public class dashboard extends Application{
     //Stock API Info
 
     private static String stockApiUrl = "https://api.twelvedata.com/time_series";
-    private static String stockApiKey = "b31fcc2718da460a83388bca924328c";
+    private static String stockApiKey = "b31fcc2718da460a83388bca924328c7";
 
     //news Search Bar
     private TextArea newsSearchField; 
@@ -54,6 +55,19 @@ public class dashboard extends Application{
     // Stock Search Frmae
 
     private TextArea stockSearchFame;
+
+    
+    private Label stockTitle;
+    private Label highLabel;
+    private Label lowLabel;
+    private Label openLabel;
+    private Label closeLabel;
+
+    private Label stockPriceHighResult;
+    private Label stockPriceLowResult;
+    private Label stockPriceOpenResult;
+    private Label stockPriceCloseResult;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -260,6 +274,7 @@ public class dashboard extends Application{
         Stage stockWindowStage = new Stage();
 
         Font fontStockHeading = Font.font("Arial", FontWeight.BLACK, 20);
+        Font stockTitleFont = Font.font("Arial", FontWeight.BOLD, 20);
 
         Label stockHeadingLabel = new Label("Search Today's Stocks");
         stockHeadingLabel.setTranslateX(180);
@@ -272,12 +287,60 @@ public class dashboard extends Application{
         stockSearchFame.setMaxWidth(300);
         stockSearchFame.setMaxHeight(10);
 
+        //stockTitle = new Label("Current Stock Information For: ");
+        //stockTitle.setFont(stockTitleFont);
+        //stockTitle.setTranslateX(140);
+        //stockTitle.setTranslateY(140);
+
+        openLabel = new Label("Opening Price:");
+        openLabel.setTranslateX(80);
+        openLabel.setTranslateY(110);
+        openLabel.setFont(stockTitleFont);
+
+        highLabel = new Label("High Price:");
+        highLabel.setTranslateX(80);
+        highLabel.setTranslateY(170);
+        highLabel.setFont(stockTitleFont);
+
+        lowLabel = new Label("Low Price");
+        lowLabel.setTranslateX(80);
+        lowLabel.setTranslateY(230);
+        lowLabel.setFont(stockTitleFont);
+
+        closeLabel = new Label("Closing Price: ");
+        closeLabel.setTranslateX(80);
+        closeLabel.setTranslateY(300);
+        closeLabel.setFont(stockTitleFont);
+
+        stockPriceOpenResult = new Label();
+        stockPriceOpenResult.setTranslateX(340);
+        stockPriceOpenResult.setTranslateY(10);
+        stockPriceOpenResult.setFont(stockTitleFont);
+
+        stockPriceHighResult = new Label();
+        stockPriceHighResult.setTranslateX(340);
+        stockPriceHighResult.setTranslateY(70);
+        stockPriceHighResult.setFont(stockTitleFont);
+        
+        stockPriceLowResult = new Label();
+        stockPriceLowResult.setTranslateX(340);
+        stockPriceLowResult.setTranslateY(130);
+        stockPriceLowResult.setFont(stockTitleFont);
+        
+        stockPriceCloseResult = new Label();
+        stockPriceCloseResult.setTranslateX(340);
+        stockPriceCloseResult.setTranslateY(200);
+        stockPriceCloseResult.setFont(stockTitleFont);
+
         Button stockSearchButton = new Button("Search");
         stockSearchButton.setTranslateX(270);
-        stockSearchButton.setTranslateY(70);
+        stockSearchButton.setTranslateY(60);
+        stockSearchButton.setOnAction(e -> searchStock(stockSearchFame.getText()));
+
 
         VBox stockBox = new VBox();
-        stockBox.getChildren().addAll(stockHeadingLabel, stockSearchFame, stockSearchButton);
+        stockBox.getChildren().addAll(stockHeadingLabel, stockSearchFame, stockSearchButton, openLabel, highLabel,
+        lowLabel, closeLabel, stockPriceOpenResult, stockPriceHighResult, stockPriceLowResult, stockPriceCloseResult);
 
         Scene stockScene = new Scene(stockBox, 600, 600);
         stockWindowStage.setScene(stockScene);
@@ -309,9 +372,6 @@ public class dashboard extends Application{
 
                 parseStockData(stockApiResponse.toString());
 
-
-
-                
             }
 
 
@@ -329,9 +389,38 @@ public class dashboard extends Application{
 
     }
 
-    private void parseStockData(String getData) {
+    private void parseStockData(String getStockData) {
+
+        JSONObject stockJson = new JSONObject(getStockData);
+        JSONArray valueArr = stockJson.getJSONArray("values");
+        
+        JSONObject zeroStockObject = valueArr.getJSONObject(0);
+
+        String openStockPrice = zeroStockObject.getString("open");
+        String highStockPrice = zeroStockObject.getString("high");
+        String lowStockPrice = zeroStockObject.getString("low");
+        String closeStockPrice = zeroStockObject.getString("close");
+
+        Double openStringtoConvert = Double.parseDouble(openStockPrice);
+        Double highStringConvert = Double.parseDouble(highStockPrice);
+        Double lowStringConvert = Double.parseDouble(lowStockPrice);
+        Double closeStringConvert = Double.parseDouble(closeStockPrice);
+
+        String formatOpenPrice = String.format("$%.2f", openStringtoConvert);
+        String formatHighPrice = String.format("$%.2f", highStringConvert);
+        String formatLowPrice = String.format("$%.2f", lowStringConvert);
+        String formatClosePrice = String.format("$%.2f", closeStringConvert);
+
+        stockPriceOpenResult.setText(formatOpenPrice);
+        stockPriceHighResult.setText(formatHighPrice);
+        stockPriceLowResult.setText(formatLowPrice);
+        stockPriceCloseResult.setText(formatClosePrice);
+
+        
+
         
     }
+    
 
     
 }
