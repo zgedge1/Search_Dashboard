@@ -28,7 +28,6 @@ import javafx.stage.Stage;
 public class dashboard extends Application{
 
     //news API Info
-<<<<<<< HEAD
 
     private static String newsApiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
     private static String newsApiUrl = "https://newsapi.org/v2/everything";
@@ -69,27 +68,6 @@ public class dashboard extends Application{
     private Label stockPriceOpenResult;
     private Label stockPriceCloseResult;
 
-=======
-
-    private static String newsApiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
-    private static String newsApiUrl = "https://newsapi.org/v2/everything";
-
-
-    //news Search Bar
-    private TextArea newsSearchField; 
-
-    // News Results
-
-    private ImageView newsImage0;
-
-    private Label titleLbl0;
-    private Label titleLbl1;
-    private Label titleLbl2;
-    
-    private Label descriptionLbl0; 
-    private Label descriptionLbl1;
-    private Label descriptionlabel2;
->>>>>>> origin/main
 
     public static void main(String[] args) {
         launch(args);
@@ -286,7 +264,6 @@ public class dashboard extends Application{
 
         titleLbl1.setText(title1);
         descriptionLbl1.setText(description1);
-<<<<<<< HEAD
         
         //displayNewsImage(imageurl0);
 
@@ -364,28 +341,6 @@ public class dashboard extends Application{
         VBox stockBox = new VBox();
         stockBox.getChildren().addAll(stockHeadingLabel, stockSearchFame, stockSearchButton, openLabel, highLabel,
         lowLabel, closeLabel, stockPriceOpenResult, stockPriceHighResult, stockPriceLowResult, stockPriceCloseResult);
-=======
-        
-        //displayNewsImage(imageurl0);
-
-    }
-
-    private void openStockWindow() {
-
-        Stage stockWindowStage = new Stage();
-
-        Font fontStockHeading = Font.font("Arial", FontWeight.BLACK, 20);
-
-        Label stockHeadingLabel = new Label("Search Today's Stocks");
-        stockHeadingLabel.setTranslateX(180);
-        stockHeadingLabel.setTranslateY(20);
-        stockHeadingLabel.setFont(fontStockHeading);
-
-
-
-        VBox stockBox = new VBox();
-        stockBox.getChildren().addAll(stockHeadingLabel);
->>>>>>> origin/main
 
         Scene stockScene = new Scene(stockBox, 600, 600);
         stockWindowStage.setScene(stockScene);
