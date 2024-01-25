@@ -69,6 +69,26 @@ public class dashboard extends Application{
     private Label stockPriceCloseResult;
 
 
+
+    private static String newsApiKey = "f8bc21d568ba450e94b0a6bb37d82c68";
+    private static String newsApiUrl = "https://newsapi.org/v2/everything";
+
+
+    //news Search Bar
+    private TextArea newsSearchField; 
+
+    // News Results
+
+    private ImageView newsImage0;
+
+    private Label titleLbl0;
+    private Label titleLbl1;
+    private Label titleLbl2;
+    
+    private Label descriptionLbl0; 
+    private Label descriptionLbl1;
+    private Label descriptionlabel2;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -158,6 +178,41 @@ public class dashboard extends Application{
         heading_Label.setTranslateY(10);
 
         // NewsResult Labels:
+
+        newsImage0 = new ImageView();
+        newsImage0.setFitHeight(200);
+        newsImage0.setFitWidth(200);
+        
+
+        titleLbl0 = new Label();
+        titleLbl0.setTranslateX(80);
+        titleLbl0.setTranslateY(90);
+        titleLbl0.setFont(fontResuleLabel);
+        titleLbl0.setWrapText(true);
+        titleLbl0.setPrefWidth(300);
+
+        titleLbl1 = new Label();
+        titleLbl1.setTranslateX(80);
+        titleLbl1.setTranslateY(250);
+        titleLbl1.setFont(fontResuleLabel);
+        titleLbl1.setWrapText(true);
+        titleLbl1.setPrefWidth(300);
+        
+        descriptionLbl0 = new Label();
+        descriptionLbl0.setTranslateX(400);
+        descriptionLbl0.setTranslateY(-10);
+        descriptionLbl0.setFont(fontResuleLabel);
+        descriptionLbl0.setWrapText(true);
+        descriptionLbl0.setPrefWidth(300);
+
+        descriptionLbl1 = new Label();
+        descriptionLbl1.setTranslateX(400);
+        descriptionLbl1.setTranslateY(80);
+        descriptionLbl1.setFont(fontResuleLabel);
+        descriptionLbl1.setWrapText(true);
+        descriptionLbl1.setPrefWidth(300);;
+
+        
 
         newsImage0 = new ImageView();
         newsImage0.setFitHeight(200);
@@ -341,6 +396,47 @@ public class dashboard extends Application{
         VBox stockBox = new VBox();
         stockBox.getChildren().addAll(stockHeadingLabel, stockSearchFame, stockSearchButton, openLabel, highLabel,
         lowLabel, closeLabel, stockPriceOpenResult, stockPriceHighResult, stockPriceLowResult, stockPriceCloseResult);
+
+
+        JSONObject json = new JSONObject(getnewsData);
+
+        JSONArray articleArr = json.getJSONArray("articles");
+        JSONObject zero = articleArr.getJSONObject(0);
+        JSONObject one = articleArr.getJSONObject(1);
+
+        //String imageurl0 = zero.getString("urlToImage");
+        String title0 = zero.getString("title");
+        String description0 = zero.getString("description");
+
+        String title1 = one.getString("title");
+        String description1 = one.getString("description");
+
+
+        titleLbl0 .setText(title0);
+        descriptionLbl0.setText(description0);
+
+        titleLbl1.setText(title1);
+        descriptionLbl1.setText(description1);
+        
+        //displayNewsImage(imageurl0);
+
+    }
+
+    private void openStockWindow() {
+
+        Stage stockWindowStage = new Stage();
+
+        Font fontStockHeading = Font.font("Arial", FontWeight.BLACK, 20);
+
+        Label stockHeadingLabel = new Label("Search Today's Stocks");
+        stockHeadingLabel.setTranslateX(180);
+        stockHeadingLabel.setTranslateY(20);
+        stockHeadingLabel.setFont(fontStockHeading);
+
+
+
+        VBox stockBox = new VBox();
+        stockBox.getChildren().addAll(stockHeadingLabel);
 
         Scene stockScene = new Scene(stockBox, 600, 600);
         stockWindowStage.setScene(stockScene);
