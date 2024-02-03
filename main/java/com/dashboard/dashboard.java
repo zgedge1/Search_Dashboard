@@ -15,9 +15,11 @@ import org.json.JSONObject;
 import javafx.application.Application;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -37,6 +39,12 @@ public class dashboard extends Application{
     private static String stockApiUrl = "https://api.twelvedata.com/time_series";
     private static String stockApiKey = "b31fcc2718da460a83388bca924328c7";
 
+
+    //Weather API info
+    
+    private static String weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather";
+    private static String weatherApiKey = "df9f6adc7d89e0757fdee3c72ae7b5eb";
+
     //news Search Bar
     private TextArea newsSearchField; 
 
@@ -52,11 +60,10 @@ public class dashboard extends Application{
     private Label descriptionLbl1;
     private Label descriptionlabel2;
 
-    // Stock Search Frmae
+    // Stock Search Frame
 
     private TextArea stockSearchFame;
 
-    
     private Label stockTitle;
     private Label highLabel;
     private Label lowLabel;
@@ -67,6 +74,14 @@ public class dashboard extends Application{
     private Label stockPriceLowResult;
     private Label stockPriceOpenResult;
     private Label stockPriceCloseResult;
+
+    // Search Weather Frame 
+
+    private TextArea searchWeatherField;
+
+    private Label resultWeatheArea;
+    private Label resultWindArea;
+    private Label resultHumidity;
 
 
     public static void main(String[] args) {
@@ -114,14 +129,27 @@ public class dashboard extends Application{
         launchStockScreenButton.setTranslateY(60);
         launchStockScreenButton.setOnAction(e -> openStockWindow());
 
+        // Actions to launch weather screen
+
+
+        Button launchWeatherScreenButton = new Button("Search Weather");
+        launchWeatherScreenButton.setMaxWidth(280);
+        launchWeatherScreenButton.setMaxHeight(200);
+        launchWeatherScreenButton.setTranslateX(160);
+        launchWeatherScreenButton.setTranslateY(80);
+        launchWeatherScreenButton.setOnAction(e -> launchWeatherScreen());
+
         VBox dashboardFrame = new VBox();
-        dashboardFrame.getChildren().addAll(headingLabel,launchnewsScreenButton, launchStockScreenButton);
+        dashboardFrame.getChildren().addAll(headingLabel,launchnewsScreenButton, launchStockScreenButton, launchWeatherScreenButton);
         
 
         Scene scene = new Scene(dashboardFrame, 600, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setResizable(false);
+
+
+
     }
 
     // news Frame Method
@@ -202,6 +230,8 @@ public class dashboard extends Application{
         newsFrame.show();
         newsFrame.setResizable(false);
     }
+
+    
 
     // Method to build URL with user input
 
@@ -348,6 +378,7 @@ public class dashboard extends Application{
         stockWindowStage.setResizable(false);
 
 
+
     }
 
     private void searchStock(String stockUserInput) {
@@ -396,6 +427,8 @@ public class dashboard extends Application{
         
         JSONObject zeroStockObject = valueArr.getJSONObject(0);
 
+
+
         String openStockPrice = zeroStockObject.getString("open");
         String highStockPrice = zeroStockObject.getString("high");
         String lowStockPrice = zeroStockObject.getString("low");
@@ -416,11 +449,62 @@ public class dashboard extends Application{
         stockPriceLowResult.setText(formatLowPrice);
         stockPriceCloseResult.setText(formatClosePrice);
 
+    }
+
+    public void launchWeatherScreen() {
+
+        Font lblFont = Font.font("arial", FontWeight.BOLD, 20);
+        
+        Stage weatherStage = new Stage();
+
+        searchWeatherField = new TextArea();
+        searchWeatherField.setMaxHeight(40);
+        searchWeatherField.setMaxWidth(200);
+        searchWeatherField.setTranslateX(190);
+        searchWeatherField.setTranslateY(30);
+
+        Button searchWeatherButton = new Button("Search Weather");
+        searchWeatherButton.setTranslateX(230);
+        searchWeatherButton.setTranslateY(60);
+
+        Label temp_lbl = new Label("Temperature: ");
+        temp_lbl.setTranslateX(60);
+        temp_lbl.setTranslateY(120);
+        temp_lbl.setFont(lblFont);
+
+        Label windLbl = new Label("Wind Speed: ");
+        windLbl.setTranslateX(60);
+        windLbl.setTranslateY(170);
+        windLbl.setFont(lblFont);
+
+        Label humidityLbl = new Label("Humidity: ");
+        humidityLbl.setTranslateX(60);
+        humidityLbl.setTranslateY(220);
+        humidityLbl.setFont(lblFont);
         
 
+        VBox weatherBox = new VBox();
+        weatherBox.getChildren().addAll(searchWeatherField, searchWeatherButton, temp_lbl, windLbl, humidityLbl);
+        
+        Scene weatherScene = new Scene(weatherBox, 600, 600);
+        weatherStage.setScene(weatherScene);
+        weatherStage.show();
+        
+    }
+
+    public void searchWeather(String searchWeatherField) throws URISyntaxException {
+
+        URI uri = new URI(buildWeatherApi(searchWeatherField));
+    }
+
+    private String buildWeatherApi(String searchWeatherField) {
+
+        return String.format(searchWeatherField, null);
+
+        
         
     }
     
-
     
-}
+    
+} 
