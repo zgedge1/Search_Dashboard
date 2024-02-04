@@ -4,7 +4,9 @@ package com.dashboard;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -82,6 +84,7 @@ public class dashboard extends Application{
     private Label resultWeatheArea;
     private Label resultWindArea;
     private Label resultHumidity;
+    private Label resultDescription;
 
 
     public static void main(String[] args) {
@@ -454,6 +457,7 @@ public class dashboard extends Application{
     public void launchWeatherScreen() {
 
         Font lblFont = Font.font("arial", FontWeight.BOLD, 20);
+        Font weatherResultFont = Font.font("arial", 20);
         
         Stage weatherStage = new Stage();
 
@@ -466,6 +470,9 @@ public class dashboard extends Application{
         Button searchWeatherButton = new Button("Search Weather");
         searchWeatherButton.setTranslateX(230);
         searchWeatherButton.setTranslateY(60);
+        searchWeatherButton.setOnAction(e -> searchWeather(searchWeatherField.getText()));
+
+        //Weather Labels
 
         Label temp_lbl = new Label("Temperature: ");
         temp_lbl.setTranslateX(60);
@@ -481,10 +488,27 @@ public class dashboard extends Application{
         humidityLbl.setTranslateX(60);
         humidityLbl.setTranslateY(220);
         humidityLbl.setFont(lblFont);
+
+        Label descriptionLabel = new Label("Description: ");
+        descriptionLabel.setTranslateX(60);
+        descriptionLabel.setTranslateY(250);
+        descriptionLabel.setFont(lblFont);
+
+        // Weather Results
+
+        resultHumidity = new Label("Humidity Result");
+        resultHumidity.setTranslateX(340);
+        resultHumidity.setTranslateY(140);
+        resultHumidity.setFont(weatherResultFont);
+
+        resultDescription = new Label("Desc Result");
+        resultDescription.setTranslateX(340);
+        resultDescription.setTranslateY(230);
+        resultDescription.setFont(weatherResultFont);
         
 
         VBox weatherBox = new VBox();
-        weatherBox.getChildren().addAll(searchWeatherField, searchWeatherButton, temp_lbl, windLbl, humidityLbl);
+        weatherBox.getChildren().addAll(searchWeatherField, searchWeatherButton, temp_lbl, windLbl, humidityLbl, descriptionLabel, resultDescription, resultHumidity);
         
         Scene weatherScene = new Scene(weatherBox, 600, 600);
         weatherStage.setScene(weatherScene);
@@ -492,16 +516,60 @@ public class dashboard extends Application{
         
     }
 
-    public void searchWeather(String searchWeatherField) throws URISyntaxException {
+    public void searchWeather(String searchWeatherField)  {
 
-        URI uri = new URI(buildWeatherApi(searchWeatherField));
+        try {
+            
+            URI uri = new URI(buildWeatherApi(searchWeatherField));
+            URL url = uri.toURL();
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                String line;
+
+                StringBuffer response = new StringBuffer();
+
+                while ((line = reader.readLine())!=null) {
+                    response.append(line);
+                    
+                }
+
+                ParseWeatherData(response.toString());
+                
+            }
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
     }
 
     private String buildWeatherApi(String searchWeatherField) {
 
-        return String.format(searchWeatherField, null);
+        return String.format("%s?q=%s&appid=%s&units=metric", weatherApiUrl, searchWeatherField, weatherApiKey);
 
-        
+
+    }
+
+    private void ParseWeatherData(String weatherInfo){
+
+        JSONObject weatherJson = new JSONObject(weatherInfo);
+        JSONArray weatherArr = weatherJson.getJSONArray("weather");
+        JSONObject zeroArr = weatherArr.getJSONObject(0);
+
+        String description0 = zeroArr.getString("description");
+
+        resultDescription.setText(description0);
+
+
+
+
+
         
     }
     
