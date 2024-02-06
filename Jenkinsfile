@@ -3,21 +3,14 @@ pipeline{
 
     stages{
         stage('SCM'){
-            steps {
+            steps{
                 checkout scm
             }
-
         }
-
         stage("SonarQube Analysis"){
-            steps {
-
-                def mvn = tool "maven";
-                withSonarQubeEnv() {
-                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=dashboard -Dsonar.projectName='dashboard'"
-            }
+            def scannerHme = tool 'SonarScanner';
+            withSonarQubeEnv(){
+                sh "${scannerHme}/bin/sonar-scanner"
             }
         }
     }
-
-}
