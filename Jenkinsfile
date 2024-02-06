@@ -8,9 +8,14 @@ pipeline{
             }
         }
         stage("SonarQube Analysis"){
-            def scannerHme = tool 'SonarScanner';
-            withSonarQubeEnv(){
-                sh "${scannerHme}/bin/sonar-scanner"
+            steps{
+                script{
+                    def scannerHme = tool 'SonarScanner';
+                    withSonarQubeEnv(){
+
+                        sh "${scannerHme}/bin/sonar-scanner"
+                }    
+            }
             }
         }
     }
