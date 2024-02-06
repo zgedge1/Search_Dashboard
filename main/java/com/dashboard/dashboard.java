@@ -543,8 +543,8 @@ public class dashboard extends Application{
             }
 
 
-        } catch (Exception e) {
-            // TODO: handle exception
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
         }
         
     }
@@ -562,12 +562,17 @@ public class dashboard extends Application{
         JSONArray weatherArr = weatherJson.getJSONArray("weather");
         JSONObject zeroArr = weatherArr.getJSONObject(0);
 
+        JSONObject main = weatherJson.getJSONObject("main");
+
         String description0 = zeroArr.getString("description");
+        Float humidity = main.getFloat("humidity");
 
         resultDescription.setText(description0);
+        resultHumidity.setText(String.valueOf(humidity) + "%");
 
-
-
+        
+        
+        
 
 
         
