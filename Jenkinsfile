@@ -13,7 +13,7 @@ pipeline {
                 script {
                     def mvn = tool 'maven1'
                     withSonarQubeEnv() {
-                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'"
+                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='dashboard.java'"
                     }
                     
                 }
