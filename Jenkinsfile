@@ -1,22 +1,19 @@
 pipeline {
     agent any
 
-
-    stages {
+    stages{
         stage('SCM') {
             steps {
                 checkout scm
-            }}
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar_scanner_1'
-                    withSonarQubeEnv() {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
             }
+        }
+
+        stage ('SonarQube Analysis') {
+            def mvn = tool 'maven1'
+            withSonarQubeEnv() {
+                sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'" 
+            }
+
         }
     }
 }
