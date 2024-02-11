@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.effect.FloatMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -81,7 +82,8 @@ public class dashboard extends Application{
 
     private TextArea searchWeatherField;
 
-    private Label resultWeatheArea;
+    private Float kelvin;
+    private Label resultTempArea;
     private Label resultWindArea;
     private Label resultHumidity;
     private Label resultDescription;
@@ -486,7 +488,7 @@ public class dashboard extends Application{
 
         Label humidityLbl = new Label("Humidity: ");
         humidityLbl.setTranslateX(60);
-        humidityLbl.setTranslateY(220);
+        humidityLbl.setTranslateY(210);
         humidityLbl.setFont(lblFont);
 
         Label descriptionLabel = new Label("Description: ");
@@ -496,6 +498,11 @@ public class dashboard extends Application{
 
         // Weather Results
 
+        resultTempArea = new Label("Temp");
+        resultTempArea.setTranslateX(340);
+        resultTempArea.setTranslateY(-50);
+        resultTempArea.setFont(weatherResultFont);        
+
         resultWindArea = new Label();
         resultWindArea.setTranslateX(340);
         resultWindArea.setTranslateY(50);
@@ -503,7 +510,7 @@ public class dashboard extends Application{
 
         resultHumidity = new Label("Humidity Result");
         resultHumidity.setTranslateX(340);
-        resultHumidity.setTranslateY(140);
+        resultHumidity.setTranslateY(135);
         resultHumidity.setFont(weatherResultFont);
 
         resultDescription = new Label("Desc Result");
@@ -513,7 +520,7 @@ public class dashboard extends Application{
         
 
         VBox weatherBox = new VBox();
-        weatherBox.getChildren().addAll(searchWeatherField, searchWeatherButton, temp_lbl, windLbl, humidityLbl, descriptionLabel, resultDescription, resultHumidity, resultWindArea);
+        weatherBox.getChildren().addAll(searchWeatherField, searchWeatherButton, temp_lbl, windLbl, humidityLbl, descriptionLabel, resultDescription, resultHumidity, resultWindArea, resultTempArea);
         
         Scene weatherScene = new Scene(weatherBox, 600, 600);
         weatherStage.setScene(weatherScene);
@@ -572,10 +579,13 @@ public class dashboard extends Application{
         JSONArray weatherArr = weatherJson.getJSONArray("weather");
         JSONObject zeroArr = weatherArr.getJSONObject(0);
 
+        Double tempKelvin = main.getDouble("temp");
         Float windSpeed = wind.getFloat("speed");
         Float humidity = main.getFloat("humidity");
         String description0 = zeroArr.getString("description");
 
+
+        resultTempArea.setText(String.valueOf(tempKelvin * (9/5) + 32 + "°F"));
         resultWindArea.setText(String.valueOf(windSpeed));
         resultHumidity.setText(String.valueOf(humidity + "%"));
         resultDescription.setText(description0);
