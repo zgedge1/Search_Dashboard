@@ -4,9 +4,7 @@ package com.dashboard;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -15,15 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.application.Application;
-import javafx.beans.binding.StringBinding;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.effect.FloatMap;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -57,17 +50,14 @@ public class dashboard extends Application{
 
     private Label titleLbl0;
     private Label titleLbl1;
-    private Label titleLbl2;
     
     private Label descriptionLbl0; 
     private Label descriptionLbl1;
-    private Label descriptionlabel2;
 
     // Stock Search Frame
 
     private TextArea stockSearchFame;
 
-    private Label stockTitle;
     private Label highLabel;
     private Label lowLabel;
     private Label openLabel;
@@ -82,7 +72,6 @@ public class dashboard extends Application{
 
     private TextArea searchWeatherField;
 
-    private Float kelvin;
     private Label resultTempArea;
     private Label resultWindArea;
     private Label resultHumidity;
