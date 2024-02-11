@@ -14,7 +14,7 @@ pipeline {
                     withSonarQubeEnv() {
                         sh """
                             ${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.java.binaries=/home/hannahome/git_artifacts/Search_Dashboard/main/java/com/dashboard
+                            -Dsonar.java.binaries=/home/hannahome/git_artifacts/Search_Dashboard/main/java/com
                         """
                     }
 
