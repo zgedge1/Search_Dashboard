@@ -7,8 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-
-        stage ('SonarQube Analysys') {
+        stage ('SonarQube Analysis') {
             def scannerHome = tool 'SonarQube'
             withSonarQubeEnv() {
                 sh "sh ${scannerHome}/bin/sonar-scanner"
