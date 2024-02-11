@@ -11,9 +11,11 @@ pipeline {
         stage('SonarQube Analysis'){
             steps {
                 script {
-                    def mvn =tool 'maven1'
-                    withSonarQubeEnv('192.168.1.210:9000')
-                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'"
+                    def mvn = tool 'maven1'
+                    withSonarQubeEnv() {
+                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'"
+                    }
+                    
                 }
             }
         }
