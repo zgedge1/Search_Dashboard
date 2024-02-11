@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     def mvn =tool 'maven1'
-                    withSonarQubeEnv
+                    withSonarQubeEnv()
                     sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'"
                 }
             }
