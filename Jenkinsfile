@@ -7,16 +7,12 @@ pipeline{
                 checkout scm
             }
         }
-        stage("SonarQube Analysis"){
-            steps{
-                script{
-                    def scannerHme = tool 'sonar_scanner_1';
-                    withSonarQubeEnv(){
-
-                        sh "${scannerHme}/bin/sonar-scanner"
-                }    
-            }
-            }
-        }
     }
+      stage('SonarQube Analysis') {
+        def mvn = tool 'Default Maven';
+        withSonarQubeEnv() {
+            sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=Dashboard -Dsonar.projectName='Dashboard'"
+    }
+  }
 }
+
