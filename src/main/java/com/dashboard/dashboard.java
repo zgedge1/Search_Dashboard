@@ -4,10 +4,13 @@ package com.dashboard;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -462,7 +466,12 @@ public class dashboard extends Application{
         searchWeatherButton.setTranslateX(230);
         searchWeatherButton.setTranslateY(60);
         searchWeatherButton.setOnAction(e -> searchWeather(searchWeatherField.getText()));
-
+        searchWeatherField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                searchWeather(searchWeatherField.getText());
+            }
+        });
+            
         //Weather Labels
 
         Label temp_lbl = new Label("Temperature: ");
@@ -487,7 +496,7 @@ public class dashboard extends Application{
 
         // Weather Results
 
-        resultTempArea = new Label("Temp");
+        resultTempArea = new Label();
         resultTempArea.setTranslateX(340);
         resultTempArea.setTranslateY(-50);
         resultTempArea.setFont(weatherResultFont);        
@@ -497,12 +506,12 @@ public class dashboard extends Application{
         resultWindArea.setTranslateY(50);
         resultWindArea.setFont(weatherResultFont);
 
-        resultHumidity = new Label("Humidity Result");
+        resultHumidity = new Label();
         resultHumidity.setTranslateX(340);
         resultHumidity.setTranslateY(135);
         resultHumidity.setFont(weatherResultFont);
 
-        resultDescription = new Label("Desc Result");
+        resultDescription = new Label();
         resultDescription.setTranslateX(340);
         resultDescription.setTranslateY(230);
         resultDescription.setFont(weatherResultFont);
@@ -551,8 +560,18 @@ public class dashboard extends Application{
     }
 
     private String buildWeatherApi(String searchWeatherField) {
+        try {
+            
+            searchWeatherField = searchWeatherField.trim();
+            searchWeatherField = URLEncoder.encode(searchWeatherField, StandardCharsets.UTF_8.toString());
 
-        return String.format("%s?q=%s&appid=%s&units=metric", weatherApiUrl, searchWeatherField, weatherApiKey);
+            return String.format("%s?q=%s&appid=%s&units=metric", weatherApiUrl, searchWeatherField, weatherApiKey);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    
 
 
     }
@@ -573,16 +592,10 @@ public class dashboard extends Application{
         Float humidity = main.getFloat("humidity");
         String description0 = zeroArr.getString("description");
 
-
         resultTempArea.setText(String.valueOf(tempKelvin * (9/5) + 32 + "°F"));
         resultWindArea.setText(String.valueOf(windSpeed));
         resultHumidity.setText(String.valueOf(humidity + "%"));
         resultDescription.setText(description0);
-
-        
-        
-        
-
 
         
     }
