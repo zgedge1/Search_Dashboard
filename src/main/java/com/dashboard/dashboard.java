@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -46,7 +47,7 @@ public class dashboard extends Application{
     private static String weatherApiKey = "df9f6adc7d89e0757fdee3c72ae7b5eb";
 
     //news Search Bar
-    private TextArea newsSearchField; 
+    private TextField newsSearchField; 
 
     // News Results
 
@@ -60,7 +61,7 @@ public class dashboard extends Application{
 
     // Stock Search Frame
 
-    private TextArea stockSearchFame;
+    private TextField stockSearchFame;
 
     private Label highLabel;
     private Label lowLabel;
@@ -74,7 +75,7 @@ public class dashboard extends Application{
 
     // Search Weather Frame 
 
-    private TextArea searchWeatherField;
+    private TextField searchWeatherField;
 
     private Label resultTempArea;
     private Label resultWindArea;
@@ -163,7 +164,7 @@ public class dashboard extends Application{
         Font fontResuleLabel = Font.font("arial", 18);
 
         //news Search Bar
-        newsSearchField = new TextArea();
+        newsSearchField = new TextField();
         newsSearchField.setTranslateX(250);
         newsSearchField.setTranslateY(25);
         newsSearchField.setMaxWidth(310);
@@ -309,7 +310,7 @@ public class dashboard extends Application{
         stockHeadingLabel.setTranslateY(20);
         stockHeadingLabel.setFont(fontStockHeading);
 
-        stockSearchFame = new TextArea();
+        stockSearchFame = new TextField();
         stockSearchFame.setTranslateX(150);
         stockSearchFame.setTranslateY(40);
         stockSearchFame.setMaxWidth(300);
@@ -456,7 +457,7 @@ public class dashboard extends Application{
         
         Stage weatherStage = new Stage();
 
-        searchWeatherField = new TextArea();
+        searchWeatherField = new TextField();
         searchWeatherField.setMaxHeight(40);
         searchWeatherField.setMaxWidth(200);
         searchWeatherField.setTranslateX(190);
